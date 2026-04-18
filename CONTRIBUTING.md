@@ -39,40 +39,30 @@ Add these secrets in **GitHub → Settings → Secrets and variables → Actions
 
 ### Release Steps
 
-1. **Update version** in `package.json` (semver):
+1. **Bump version**:
 
    ```bash
-   # Option A: Manual edit
-   # Edit "version": "0.1.2" in package.json
-
-   # Option B: Auto-bump (recommended)
    npm version patch   # or minor, major
    ```
 
-2. **Commit the version bump**:
+   This auto-bumps the version in `package.json`, creates a commit, and adds a local tag.
+
+2. **Push to trigger CI**:
 
    ```bash
-   git push
+   git push && git push --tags
    ```
 
-3. **Tag and release**:
-
-   ```bash
-   npm run release
-   ```
-
-   This creates and pushes a tag (e.g. `v0.1.2`), which triggers the CI workflow to publish to:
+   This pushes the commit + tag, triggering the CI workflow to publish to:
    - Open VSX Registry
    - Visual Studio Marketplace
 
-   The workflow packages once and publishes to both registries with the same `.vsix`.
-
 ### Version Numbering
 
-Use [semantic versioning](https://semver.org/):
-- `patch` — bug fixes (0.1.2 → 0.1.3)
-- `minor` — new features (0.1.2 → 0.2.0)
-- `major` — breaking changes (0.1.2 → 1.0.0)
+Use [semantic versioning](https://semver.org/) with `npm version`:
+- `npm version patch` — bug fixes (0.1.2 → 0.1.3)
+- `npm version minor` — new features (0.1.2 → 0.2.0)
+- `npm version major` — breaking changes (0.1.2 → 1.0.0)
 
 ## Manual Publish (without CI)
 

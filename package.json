@@ -90,7 +90,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test",
-    "release": "git tag v$(npm pkg get version --silent) && git push origin v$(npm pkg get version --silent)"
+    "release": "npm version patch && git push && git push --tags"
   },
   "devDependencies": {
     "@types/vscode": "^1.116.0",
