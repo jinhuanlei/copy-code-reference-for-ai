@@ -4,6 +4,10 @@
   "description": "Allow users to easily copy code (relative and absolute path) references into an AI agent.",
   "version": "0.1.0",
   "publisher": "jinhuanlei",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jinhuanlei/copy-code-reference-for-ai"
+  },
   "engines": {
     "vscode": "^1.116.0"
   },
