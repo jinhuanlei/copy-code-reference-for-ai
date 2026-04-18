@@ -2,7 +2,8 @@
   "name": "copy-code-reference-for-ai",
   "displayName": "Copy Code Reference for AI",
   "description": "Allow users to easily copy code (relative and absolute path) references into an AI agent.",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "publisher": "jinhuanlei",
   "engines": {
     "vscode": "^1.116.0"
   },
@@ -14,10 +15,68 @@
   "contributes": {
     "commands": [
       {
-        "command": "copy-code-reference-for-ai.helloWorld",
-        "title": "Hello World"
+        "command": "copyCodeRefForAi.copyRelativeReference",
+        "title": "Copy Relative Code Reference for AI",
+        "category": "Copy Code Reference"
+      },
+      {
+        "command": "copyCodeRefForAi.copyAbsoluteReference",
+        "title": "Copy Absolute Code Reference for AI",
+        "category": "Copy Code Reference"
       }
-    ]
+    ],
+    "keybindings": [
+      {
+        "command": "copyCodeRefForAi.copyRelativeReference",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "copyCodeRefForAi.copyAbsoluteReference",
+        "key": "ctrl+shift+alt+c",
+        "mac": "cmd+shift+alt+c",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "copyCodeRefForAi.copyRelativeReference",
+          "group": "9_cutcopypaste@100"
+        },
+        {
+          "command": "copyCodeRefForAi.copyAbsoluteReference",
+          "group": "9_cutcopypaste@101"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Copy Code Reference for AI",
+      "properties": {
+        "copyCodeRefForAi.autoFocusTarget": {
+          "type": "string",
+          "enum": ["claudeCode", "vscodeChat", "none"],
+          "default": "claudeCode",
+          "markdownDescription": "Where to focus after copying. `claudeCode` focuses the Claude Code extension input, `vscodeChat` focuses the built-in VS Code Chat input, `none` leaves focus alone."
+        },
+        "copyCodeRefForAi.prefix": {
+          "type": "string",
+          "default": "@",
+          "description": "Prefix character for the reference (e.g. @ or #)."
+        },
+        "copyCodeRefForAi.pathLineSeparator": {
+          "type": "string",
+          "default": ":",
+          "description": "Separator between the path and the first line number."
+        },
+        "copyCodeRefForAi.lineRangeSeparator": {
+          "type": "string",
+          "default": "-",
+          "description": "Separator between the start and end line numbers."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
