@@ -8,6 +8,7 @@
     "type": "git",
     "url": "https://github.com/jinhuanlei/copy-code-reference-for-ai"
   },
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.116.0"
   },
