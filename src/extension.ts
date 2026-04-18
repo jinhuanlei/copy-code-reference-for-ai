@@ -28,6 +28,17 @@ async function copyReference(mode: Mode): Promise<void> {
     }
 
     const doc = editor.document;
+    if (doc.isUntitled) {
+        vscode.window.showWarningMessage('Copy Code Reference: save the file first.');
+        return;
+    }
+    if (doc.uri.scheme !== 'file') {
+        vscode.window.showWarningMessage(
+            `Copy Code Reference: unsupported URI scheme "${doc.uri.scheme}".`,
+        );
+        return;
+    }
+
     const selection = editor.selection;
     const { startLine, endLine } = normalizeLineRange(
         selection.start.line,
@@ -36,9 +47,13 @@ async function copyReference(mode: Mode): Promise<void> {
         selection.end.character,
     );
 
-    const absolutePath = doc.uri.fsPath;
+    const fsPath = doc.uri.fsPath;
+    // AI agents (Claude Code, VS Code Chat) universally expect POSIX-style
+    // paths. Normalize Windows backslashes in the absolute branch; relative
+    // paths from asRelativePath are already forward-slashed on all platforms.
+    const absolutePath = fsPath.replace(/\\/g, '/');
     const asRel = vscode.workspace.asRelativePath(doc.uri, false);
-    const hasRelative = asRel !== absolutePath;
+    const hasRelative = asRel !== fsPath;
 
     let path: string;
     let fellBack = false;

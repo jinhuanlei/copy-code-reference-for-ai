@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+.aidev/**
 out/**
 node_modules/**
 src/**
