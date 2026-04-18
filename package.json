@@ -2,7 +2,7 @@
   "name": "copy-code-reference-for-ai",
   "displayName": "Copy Code Reference for AI",
   "description": "Allow users to easily copy code (relative and absolute path) references into an AI agent.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "jinhuanlei",
   "repository": {
     "type": "git",
