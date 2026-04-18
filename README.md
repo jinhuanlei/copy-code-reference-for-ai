@@ -20,7 +20,6 @@ Works with both VS Code and Cursor.
 
 | Setting | Type | Default | Description |
 |---|---|---|---|
-| `copyCodeRefForAi.autoFocusTarget` | string | `"claudeCode"` | `claudeCode` \| `vscodeChat` \| `none` — target to focus after copy |
 | `copyCodeRefForAi.prefix` | string | `"@"` | Prefix character (e.g. `@` or `#`) |
 | `copyCodeRefForAi.pathLineSeparator` | string | `":"` | Between path and line number |
 | `copyCodeRefForAi.lineRangeSeparator` | string | `"-"` | Between start and end line |
@@ -36,7 +35,6 @@ Works with both VS Code and Cursor.
 
 ```json
 {
-    "copyCodeRefForAi.autoFocusTarget": "claudeCode",
     "copyCodeRefForAi.prefix": "@",
     "copyCodeRefForAi.pathLineSeparator": ":",
     "copyCodeRefForAi.lineRangeSeparator": "-"

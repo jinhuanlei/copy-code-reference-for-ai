@@ -65,33 +65,4 @@ async function copyReference(mode: Mode): Promise<void> {
 
     const note = fellBack ? ' (no workspace — used absolute)' : '';
     vscode.window.setStatusBarMessage(`Copied: ${reference}${note}`, 3000);
-
-    const target = cfg.get<string>('autoFocusTarget', 'claudeCode');
-    await focusAiInput(target);
-}
-
-async function focusAiInput(target: string): Promise<void> {
-    if (target === 'none') {
-        return;
-    }
-    const candidates =
-        target === 'claudeCode'
-            ? ['claude-code.focus', 'claude-code.focusInput', 'claude.focus', 'claude.focusInput']
-            : target === 'vscodeChat'
-                ? ['workbench.action.chat.focusInput', 'workbench.action.chat.open']
-                : [];
-    if (candidates.length === 0) {
-        return;
-    }
-    try {
-        const available = new Set(await vscode.commands.getCommands(true));
-        for (const cmd of candidates) {
-            if (available.has(cmd)) {
-                await vscode.commands.executeCommand(cmd);
-                return;
-            }
-        }
-    } catch {
-        // best-effort; clipboard copy already succeeded
-    }
 }

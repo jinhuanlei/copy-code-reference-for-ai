@@ -54,12 +54,6 @@
     "configuration": {
       "title": "Copy Code Reference for AI",
       "properties": {
-        "copyCodeRefForAi.autoFocusTarget": {
-          "type": "string",
-          "enum": ["claudeCode", "vscodeChat", "none"],
-          "default": "claudeCode",
-          "markdownDescription": "Where to focus after copying. `claudeCode` focuses the Claude Code extension input, `vscodeChat` focuses the built-in VS Code Chat input, `none` leaves focus alone."
-        },
         "copyCodeRefForAi.prefix": {
           "type": "string",
           "default": "@",
