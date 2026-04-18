@@ -1,6 +1,7 @@
 .vscode/**
 .vscode-test/**
 .aidev/**
+.github/**
 out/**
 node_modules/**
 src/**
