@@ -28,6 +28,11 @@
         "command": "copyCodeRefForAi.copyAbsoluteReference",
         "title": "Copy Absolute Code Reference for AI",
         "category": "Copy Code Reference"
+      },
+      {
+        "command": "copyCodeRefForAi.copyRemoteReference",
+        "title": "Copy Permalink for AI",
+        "category": "Copy Code Reference"
       }
     ],
     "keybindings": [
@@ -53,6 +58,10 @@
         {
           "command": "copyCodeRefForAi.copyAbsoluteReference",
           "group": "9_cutcopypaste@101"
+        },
+        {
+          "command": "copyCodeRefForAi.copyRemoteReference",
+          "group": "9_cutcopypaste@102"
         }
       ]
     },
@@ -73,6 +82,12 @@
           "type": "string",
           "default": "-",
           "description": "Separator between the start and end line numbers."
+        },
+        "copyCodeRefForAi.remoteRef": {
+          "type": "string",
+          "enum": ["branch", "commit"],
+          "default": "commit",
+          "description": "Whether the remote permalink uses the current branch name (mutable) or commit hash (stable permalink)."
         }
       }
     }
