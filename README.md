@@ -10,11 +10,13 @@ Works with both VS Code and Cursor.
 |---|---|---|
 | **Copy Relative Code Reference for AI** | `Ctrl+Shift+C` / `Cmd+Shift+C` | `@src/foo.ts:10-20` |
 | **Copy Absolute Code Reference for AI** | `Ctrl+Shift+Alt+C` / `Cmd+Shift+Alt+C` | `@/Users/you/project/src/foo.ts:10-20` |
+| **Copy Remote Reference** | — | `https://github.com/owner/repo/blob/commit/path/file.ts#L10-L20` |
 
 - With just a caret (no selection), each command copies a single-line reference (e.g. `@src/foo.ts:10`).
-- Both commands also appear in the editor's right-click menu under the Copy/Paste section.
+- All commands also appear in the editor's right-click menu under the Copy/Paste section.
 - Rebind either shortcut independently from VS Code's Keyboard Shortcuts UI.
 - The relative command falls back to the absolute path when the file is outside every workspace folder.
+- The remote reference command copies a GitHub/GitLab/Bitbucket permalink. After copying, a prompt offers to **Open in Browser**.
 
 ## Settings
 
@@ -23,6 +25,7 @@ Works with both VS Code and Cursor.
 | `copyCodeRefForAi.prefix` | string | `"@"` | Prefix character (e.g. `@` or `#`) |
 | `copyCodeRefForAi.pathLineSeparator` | string | `":"` | Between path and line number |
 | `copyCodeRefForAi.lineRangeSeparator` | string | `"-"` | Between start and end line |
+| `copyCodeRefForAi.remoteRef` | string | `"commit"` | Remote reference type: `"commit"` (stable permalink) or `"branch"` (mutable) |
 
 ### Output format examples
 
@@ -30,6 +33,7 @@ Works with both VS Code and Cursor.
 - Single line (no selection): `@src/foo.ts:10`
 - Absolute: `@/Users/you/project/src/foo.ts:10-20`
 - `pathLineSeparator: "#"`: `@src/foo.ts#10-20`
+- Remote (GitHub): `https://github.com/owner/repo/blob/abc123/path/file.ts#L10-L20`
 
 ### Example `settings.json`
 
@@ -37,7 +41,8 @@ Works with both VS Code and Cursor.
 {
     "copyCodeRefForAi.prefix": "@",
     "copyCodeRefForAi.pathLineSeparator": ":",
-    "copyCodeRefForAi.lineRangeSeparator": "-"
+    "copyCodeRefForAi.lineRangeSeparator": "-",
+    "copyCodeRefForAi.remoteRef": "commit"
 }
 ```
 

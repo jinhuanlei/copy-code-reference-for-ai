@@ -151,5 +151,9 @@ async function copyRemoteReference(): Promise<void> {
 
     const url = buildRemoteUrl(parsed, relativePath, startLine, endLine, ref);
     await vscode.env.clipboard.writeText(url);
-    vscode.window.setStatusBarMessage(`Copied: ${url}`, 3000);
+    const action = 'Open in Browser';
+    const answer = await vscode.window.showInformationMessage(`Copied: ${url}`, action);
+    if (answer === action) {
+        await vscode.env.openExternal(vscode.Uri.parse(url));
+    }
 }
