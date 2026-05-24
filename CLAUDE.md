@@ -34,12 +34,11 @@ Build output lands in `dist/extension.js`. The `.vsix` package is produced by `v
 
 ## SDLC — Making Changes
 
-1. **Branch** — work on a feature branch; do not commit directly to `main`.
+1. **Branch** — work on a feature branch; commit directly to `main` if user approves.
 2. **Develop** — edit `src/`. Use `npm run watch` for live feedback.
 3. **Test** — run `npm test` before marking work done. Tests live in `src/test/`.
 4. **Type-check & lint** — `npm run compile` must pass cleanly (zero errors, zero warnings).
-5. **PR** — open a pull request against `main`; do not push directly to `main` without explicit user approval.
-6. **Review** — user reviews and merges the PR.
+5. **PR / Push** — open a pull request against `main`, or push directly to `main` with user approval.
 
 ## Release Process — REQUIRES USER APPROVAL
 
@@ -64,7 +63,7 @@ ovsx publish   # Open VSX
 
 ## Hard Rules for Agents
 
-- **Do not push to `main`** without explicit user permission.
+- **Do not push to `main`** without explicit user permission or approval.
 - **Do not run `npm version`** or any release/publish command without explicit user permission.
 - **Do not run `git push --tags`** without explicit user permission.
 - **Do not run `vsce publish` or `ovsx publish`** without explicit user permission.
