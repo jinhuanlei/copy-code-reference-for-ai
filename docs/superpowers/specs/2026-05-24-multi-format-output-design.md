@@ -72,31 +72,126 @@ export const FORMAT_PROFILES: FormatProfile[] = [
   { id: 'plain', label: 'Plain', prefix: '', pathLineSeparator: ':', lineRangeSeparator: '-' },
 ];
 
-export function resolveFormatConfig(formatSetting: string, userConfig: FormatterConfig): FormatterConfig { ... }
+export function resolveFormatConfig(formatSetting: string, userConfig: FormatterConfig): FormatterConfig {
+  if (formatSetting === 'custom') {
+    return userConfig;
+  }
+  const profile = FORMAT_PROFILES.find(p => p.id === formatSetting);
+  if (!profile) {
+    return userConfig;
+  }
+  return {
+    prefix: profile.prefix,
+    pathLineSeparator: profile.pathLineSeparator,
+    lineRangeSeparator: profile.lineRangeSeparator,
+  };
+}
 ```
 
 `resolveFormatConfig` returns the effective `FormatterConfig`:
 - If `formatSetting === 'custom'`, returns `userConfig` (existing settings)
 - Otherwise, finds the matching profile and returns its config
-
-### Changes to `src/extension.ts`
-
-1. `copyReference()` calls `resolveFormatConfig()` instead of reading individual settings directly.
-2. New `copyAs()` function registered as `copyCodeRefForAi.copyAs`:
-   - Resolves the current editor and selection (shared logic with `copyReference`)
-   - Builds a preview string for each format profile + remote permalink
-   - Shows quick-pick
-   - On selection, copies the appropriate reference
+- If no matching profile is found, falls back to `userConfig`
 
 ### Shared selection resolution
 
 Extract the common editor/selection/line-normalization logic from `copyReference` into a helper function used by both `copyReference` and `copyAs`. This avoids duplication.
 
+```ts
+interface ResolvedSelection {
+  path: string;           // relative or absolute path string
+  startLine: number;      // 1-based
+  endLine: number;        // 1-based
+  fellBack: boolean;      // true if no workspace, fell back to absolute
+}
+
+function resolveSelection(mode: 'relative' | 'absolute'): ResolvedSelection | string {
+  // Returns ResolvedSelection on success, or an error message string on failure.
+  // Reuses the same validation and normalization logic currently in copyReference():
+  //   - Check editor exists, file is saved, URI scheme is 'file'
+  //   - Normalize line range via normalizeLineRange()
+  //   - Compute relative/absolute path with fallback logic
+  //   - Return { path, startLine, endLine, fellBack }
+  //   - On validation failure, return the warning message string
+}
+```
+
+`copyReference('relative')` and `copyReference('absolute')` both call `resolveSelection(mode)` and then `buildReference()`. On error string, show warning and return.
+
+### Changes to `src/extension.ts`
+
+1. `copyReference()` calls `resolveSelection(mode)` instead of inlining the logic, then calls `resolveFormatConfig()` to get the effective config, then `buildReference()`.
+2. New `copyAs()` function registered as `copyCodeRefForAi.copyAs`. Step-by-step logic:
+
+```
+async function copyAs():
+  1. editor = vscode.window.activeTextEditor
+     if no editor → show warning, return
+  2. doc = editor.document
+     if untitled or non-file URI → show warning, return
+  3. selection = resolveSelection('relative')
+     if selection is string (error) → show warning, return
+  4. Build quick-pick items:
+     a. For each profile in FORMAT_PROFILES:
+        - label = "$(file-code) " + profile.label
+        - description = buildReference({ path, startLine, endLine }, profile config)
+     b. Custom item:
+        - label = "$(gear) Custom (current settings)"
+        - description = buildReference({ path, startLine, endLine }, userConfig from settings)
+     c. Remote Permalink item:
+        - label = "$(link) Remote Permalink"
+        - Call getRepoInfo(doc.uri)
+          - If error → description = "(no git remote)" and disable this item
+          - If ok → parseRemoteUrl + buildRemoteUrl → description = the URL
+  5. Show vscode.window.showQuickPick(items)
+  6. If user cancels → return
+  7. If selected item is Remote Permalink:
+     - await vscode.env.clipboard.writeText(url)
+     - Show status bar message with URL
+  8. Otherwise:
+     - await vscode.env.clipboard.writeText(item.description)
+     - Show status bar message "Copied: " + item.description
+```
+
 ### package.json changes
 
-- Add `copyCodeRefForAi.format` enum setting to `contributes.configuration`
-- Add `copyCodeRefForAi.copyAs` command to `contributes.commands`
-- Add context menu entry for "Copy as..." in `contributes.menus.editor/context`
+Add `copyCodeRefForAi.format` enum setting to `contributes.configuration`:
+
+```json
+"copyCodeRefForAi.format": {
+  "type": "string",
+  "enum": ["custom", "claude-code", "opencode", "plain"],
+  "enumDescriptions": [
+    "Use the prefix, pathLineSeparator, and lineRangeSeparator settings",
+    "Claude Code format: @path#line-line",
+    "OpenCode format: @path:line-line",
+    "Plain format: path:line-line (no prefix)"
+  ],
+  "default": "custom",
+  "description": "Preset format profile for code references. When set to anything other than 'custom', the profile overrides prefix/pathLineSeparator/lineRangeSeparator settings."
+}
+```
+
+Add `copyCodeRefForAi.copyAs` command to `contributes.commands`:
+
+```json
+{
+  "command": "copyCodeRefForAi.copyAs",
+  "title": "Copy Code Reference as...",
+  "category": "Copy Code Reference"
+}
+```
+
+Add context menu entry for "Copy as..." in `contributes.menus.editor/context`:
+
+```json
+{
+  "command": "copyCodeRefForAi.copyAs",
+  "group": "9_cutcopypaste@103"
+}
+```
+
+Note: The existing `copyRemoteReference` context menu entry stays at `@102`. The new "Copy as..." goes at `@103`. Renumber the existing remote entry or adjust as needed — the key point is "Copy as..." appears after the existing commands in the context menu.
 
 ## What Does NOT Change
 
