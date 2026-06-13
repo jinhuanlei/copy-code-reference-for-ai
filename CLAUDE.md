@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-VS Code / Cursor extension that copies code references (`@src/foo.ts:10-20`) to the clipboard for pasting into AI agents. Published to both VS Code Marketplace and Open VSX Registry.
+VS Code / Cursor extension that copies code references for different AI agents (like `@src/foo.ts:10-20`) to the clipboard for pasting into AI agents. Published to both the VS Code Marketplace and the Open VSX Registry.
 
 - **Publisher**: see `package.json`
 - **Current version**: see `package.json`
