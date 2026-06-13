@@ -33,6 +33,11 @@
         "command": "copyCodeRefForAi.copyRemoteReference",
         "title": "Copy Permalink for AI",
         "category": "Copy Code Reference"
+      },
+      {
+        "command": "copyCodeRefForAi.copyAs",
+        "title": "Copy Code Reference as...",
+        "category": "Copy Code Reference"
       }
     ],
     "keybindings": [
@@ -52,16 +57,8 @@
     "menus": {
       "editor/context": [
         {
-          "command": "copyCodeRefForAi.copyRelativeReference",
+          "command": "copyCodeRefForAi.copyAs",
           "group": "9_cutcopypaste@100"
-        },
-        {
-          "command": "copyCodeRefForAi.copyAbsoluteReference",
-          "group": "9_cutcopypaste@101"
-        },
-        {
-          "command": "copyCodeRefForAi.copyRemoteReference",
-          "group": "9_cutcopypaste@102"
         }
       ]
     },
@@ -91,6 +88,23 @@
           ],
           "default": "commit",
           "description": "Whether the remote permalink uses the current branch name (mutable) or commit hash (stable permalink)."
+        },
+        "copyCodeRefForAi.format": {
+          "type": "string",
+          "enum": [
+            "custom",
+            "claude-code",
+            "opencode",
+            "plain"
+          ],
+          "enumDescriptions": [
+            "Use the prefix, pathLineSeparator, and lineRangeSeparator settings",
+            "Claude Code format: @path#line-line",
+            "OpenCode format: @path:line-line",
+            "Plain format: path:line-line (no prefix)"
+          ],
+          "default": "custom",
+          "description": "Preset format profile for code references. When set to anything other than 'custom', the profile overrides prefix/pathLineSeparator/lineRangeSeparator settings."
         }
       }
     }
@@ -112,7 +126,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "22.x",
+    "@types/node": "^22.19.21",
     "@types/vscode": "~1.75.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
