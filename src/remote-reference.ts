@@ -49,28 +49,29 @@ export function parseRemoteUrl(url: string): ParsedRemote | null {
 export function buildRemoteUrl(
     remote: ParsedRemote,
     filePath: string,
-    startLine: number,
-    endLine: number,
+    startLine: number | undefined,
+    endLine: number | undefined,
     ref: string,
 ): string {
     const { host, owner, repo } = remote;
-    const isSingleLine = startLine === endLine;
+    const hasLines = startLine !== undefined && endLine !== undefined;
+    const isSingleLine = hasLines && startLine === endLine;
 
     switch (host) {
         case 'github': {
-            const anchor = isSingleLine
+            const anchor = !hasLines ? '' : isSingleLine
                 ? `#L${startLine}`
                 : `#L${startLine}-L${endLine}`;
             return `https://github.com/${owner}/${repo}/blob/${ref}/${filePath}${anchor}`;
         }
         case 'gitlab': {
-            const anchor = isSingleLine
+            const anchor = !hasLines ? '' : isSingleLine
                 ? `#L${startLine}`
                 : `#L${startLine}-${endLine}`;
             return `https://gitlab.com/${owner}/${repo}/-/blob/${ref}/${filePath}${anchor}`;
         }
         case 'bitbucket': {
-            const anchor = isSingleLine
+            const anchor = !hasLines ? '' : isSingleLine
                 ? `#lines-${startLine}`
                 : `#lines-${startLine}:${endLine}`;
             return `https://bitbucket.org/${owner}/${repo}/src/${ref}/${filePath}${anchor}`;

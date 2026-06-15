@@ -6,12 +6,15 @@ export interface FormatterConfig {
 
 export interface ReferenceInput {
     path: string;
-    startLine: number;
-    endLine: number;
+    startLine?: number;
+    endLine?: number;
 }
 
 export function buildReference(input: ReferenceInput, config: FormatterConfig): string {
     const { prefix, pathLineSeparator, lineRangeSeparator } = config;
+    if (input.startLine === undefined || input.endLine === undefined) {
+        return `${prefix}${input.path}`;
+    }
     const suffix =
         input.startLine === input.endLine
             ? `${pathLineSeparator}${input.startLine}`

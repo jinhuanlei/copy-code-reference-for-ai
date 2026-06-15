@@ -119,4 +119,27 @@ suite('buildRemoteUrl', () => {
             );
         });
     });
+
+    suite('no line numbers — file-level URLs', () => {
+        test('GitHub omits anchor', () => {
+            assert.strictEqual(
+                buildRemoteUrl(github, path, undefined, undefined, ref),
+                'https://github.com/alice/myrepo/blob/abc1234/src/foo.ts',
+            );
+        });
+
+        test('GitLab omits anchor', () => {
+            assert.strictEqual(
+                buildRemoteUrl(gitlab, path, undefined, undefined, ref),
+                'https://gitlab.com/alice/myrepo/-/blob/abc1234/src/foo.ts',
+            );
+        });
+
+        test('Bitbucket omits anchor', () => {
+            assert.strictEqual(
+                buildRemoteUrl(bitbucket, path, undefined, undefined, ref),
+                'https://bitbucket.org/alice/myrepo/src/abc1234/src/foo.ts',
+            );
+        });
+    });
 });

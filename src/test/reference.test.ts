@@ -55,6 +55,16 @@ suite('buildReference', () => {
         );
         assert.strictEqual(out, '#src/foo.ts:10');
     });
+
+    test('no line numbers — omits line suffix', () => {
+        const out = buildReference({ path: 'src/foo.ts' }, CFG);
+        assert.strictEqual(out, '@src/foo.ts');
+    });
+
+    test('no line numbers — respects prefix', () => {
+        const out = buildReference({ path: 'src/foo.ts' }, { ...CFG, prefix: '#' });
+        assert.strictEqual(out, '#src/foo.ts');
+    });
 });
 
 suite('normalizeLineRange', () => {

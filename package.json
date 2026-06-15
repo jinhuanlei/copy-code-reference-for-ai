@@ -52,6 +52,12 @@
         "key": "ctrl+shift+alt+c",
         "mac": "cmd+shift+alt+c",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "copyCodeRefForAi.copyFileReference",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "explorerViewletFocus"
       }
     ],
     "menus": {
@@ -88,6 +94,15 @@
           ],
           "default": "commit",
           "description": "Whether the remote permalink uses the current branch name (mutable) or commit hash (stable permalink)."
+        },
+        "copyCodeRefForAi.explorerPathMode": {
+          "type": "string",
+          "enum": [
+            "relative",
+            "absolute"
+          ],
+          "default": "relative",
+          "description": "Whether the explorer/tab right-click copies a relative or absolute path."
         },
         "copyCodeRefForAi.format": {
           "type": "string",

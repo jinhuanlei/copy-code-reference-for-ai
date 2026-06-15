@@ -37,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
             'copyCodeRefForAi.copyAs',
             () => copyAs(),
         ),
+        vscode.commands.registerCommand(
+            'copyCodeRefForAi.copyFileReference',
+            (uri?: vscode.Uri) => copyFileReference(uri),
+        ),
     );
 }
 
@@ -94,7 +98,7 @@ function getUserConfig(): FormatterConfig {
     };
 }
 
-function resolveRemoteUrl(docUri: vscode.Uri, startLine: number, endLine: number): RemoteUrlResult {
+function resolveRemoteUrl(docUri: vscode.Uri, startLine: number | undefined, endLine: number | undefined): RemoteUrlResult {
     const repoResult = getRepoInfo(docUri);
     if (repoResult.kind === 'error') {
         const messages = {
@@ -147,6 +151,30 @@ async function copyReference(mode: Mode): Promise<void> {
     vscode.window.setStatusBarMessage(`Copied: ${reference}${note}`, 3000);
 }
 
+async function copyFileReference(uri?: vscode.Uri): Promise<void> {
+    const resolvedUri = uri ?? vscode.window.activeTextEditor?.document.uri;
+    if (!resolvedUri || resolvedUri.scheme !== 'file') {
+        vscode.window.showWarningMessage('Copy File Reference: open or select a file first.');
+        return;
+    }
+
+    const cfg = vscode.workspace.getConfiguration(CONFIG_NS);
+    const mode = cfg.get<string>('explorerPathMode', 'relative');
+
+    const fsPath = resolvedUri.fsPath.replace(/\\/g, '/');
+    const asRel = vscode.workspace.asRelativePath(resolvedUri, false);
+    const hasRelative = asRel !== fsPath;
+
+    const path = mode === 'absolute'
+        ? fsPath
+        : hasRelative ? asRel : fsPath;
+
+    const formatConfig = resolveFormatConfig(cfg.get<string>('format', 'custom'), getUserConfig());
+    const reference = buildReference({ path }, formatConfig);
+    await vscode.env.clipboard.writeText(reference);
+    vscode.window.setStatusBarMessage(`Copied: ${reference}`, 3000);
+}
+
 async function copyAs(): Promise<void> {
     const result = resolveSelection('relative');
     if (typeof result === 'string') {
@@ -156,7 +184,7 @@ async function copyAs(): Promise<void> {
 
     const { path, startLine, endLine } = result;
     const userConfig = getUserConfig();
-    const doc = vscode.window.activeTextEditor!.document;
+    const docUri = vscode.window.activeTextEditor!.document.uri;
 
     interface QuickPickItemEx extends vscode.QuickPickItem {
         value: string | null;
@@ -180,7 +208,7 @@ async function copyAs(): Promise<void> {
         isRemote: false,
     });
 
-    const remoteResult = resolveRemoteUrl(doc.uri, startLine, endLine);
+    const remoteResult = resolveRemoteUrl(docUri, startLine, endLine);
     items.push(remoteResult.kind === 'ok'
         ? { label: '$(link) Remote Permalink', description: remoteResult.url, value: remoteResult.url, isRemote: true }
         : { label: '$(link) Remote Permalink', description: `(${remoteResult.message})`, value: null, isRemote: true },
