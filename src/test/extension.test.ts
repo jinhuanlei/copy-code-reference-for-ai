@@ -63,6 +63,54 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(clipboard, expected);
   });
 
+  test("copyFileReference copies a path reference with no line numbers", async () => {
+    await vscode.env.clipboard.writeText("");
+    await vscode.commands.executeCommand(
+      "copyCodeRefForAi.copyFileReference",
+      vscode.Uri.file(tempFile),
+    );
+    const clipboard = await vscode.env.clipboard.readText();
+
+    const expected = `@${tempFile.replace(/\\/g, "/")}`;
+    assert.strictEqual(clipboard, expected);
+  });
+
+  suite("hidden copyFileReference wiring (see docs/adr/0001)", () => {
+    const pkg = vscode.extensions.getExtension(
+      "jinhuanlei.copy-code-reference-for-ai",
+    )?.packageJSON;
+
+    test("extension manifest is loaded", () => {
+      assert.ok(pkg, "extension manifest should be available");
+    });
+
+    test("copyFileReference is NOT in contributes.commands (kept hidden)", () => {
+      const ids: string[] = (pkg.contributes?.commands ?? []).map(
+        (c: { command: string }) => c.command,
+      );
+      assert.ok(
+        !ids.includes("copyCodeRefForAi.copyFileReference"),
+        "copyFileReference must stay out of the command palette",
+      );
+    });
+
+    test("copyFileReference keybinding is registered", () => {
+      const keys: string[] = (pkg.contributes?.keybindings ?? []).map(
+        (k: { command: string }) => k.command,
+      );
+      assert.ok(keys.includes("copyCodeRefForAi.copyFileReference"));
+    });
+
+    test("explicit activation event keeps the keybinding working", () => {
+      assert.ok(
+        (pkg.activationEvents ?? []).includes(
+          "onCommand:copyCodeRefForAi.copyFileReference",
+        ),
+        "missing onCommand activation event would cause 'command not found'",
+      );
+    });
+  });
+
   test("untitled document does not overwrite the clipboard", async () => {
     const doc = await vscode.workspace.openTextDocument({
       language: "typescript",

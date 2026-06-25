@@ -20,6 +20,15 @@ Published to both the VS Code Marketplace and the Open VSX Registry.
 
 Both also appear in the editor right-click context menu.
 
+## Architecture Decisions
+
+Non-obvious design choices are recorded as ADRs in `docs/adr/`. Read the
+relevant ADR before changing the area it covers.
+
+- [ADR 0001](docs/adr/0001-hidden-copyfilereference-command.md) —
+  `copyFileReference` is an intentionally hidden, keyboard-only command (not in
+  the command palette or menus). Do not "fix" the missing palette entry.
+
 ## Dev Workflow
 
 ```bash

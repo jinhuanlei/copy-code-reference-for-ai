@@ -38,6 +38,10 @@ export function activate(context: vscode.ExtensionContext) {
       () => copyRemoteReference(),
     ),
     vscode.commands.registerCommand("copyCodeRefForAi.copyAs", () => copyAs()),
+    // Intentionally a hidden command: registered here so the Explorer
+    // Cmd+Shift+C keybinding works, but deliberately NOT in package.json's
+    // contributes.commands or menus. See docs/adr/0001-hidden-copyfilereference-command.md
+    // Do not "fix" the missing palette entry — the omission is by design.
     vscode.commands.registerCommand(
       "copyCodeRefForAi.copyFileReference",
       (uri?: vscode.Uri) => copyFileReference(uri),
@@ -185,10 +189,10 @@ async function copyFileReference(uri?: vscode.Uri): Promise<void> {
     cfg.get<string>("format", "custom"),
     getUserConfig(),
   );
-  const explorerPrefix = cfg.get<string | null>("explorerPrefix", null);
+  const fileRefPrefix = cfg.get<string | null>("fileRefPrefix", null);
   const effectiveConfig =
-    explorerPrefix !== null
-      ? { ...formatConfig, prefix: explorerPrefix }
+    fileRefPrefix !== null
+      ? { ...formatConfig, prefix: fileRefPrefix }
       : formatConfig;
 
   const reference = buildReference({ path }, effectiveConfig);

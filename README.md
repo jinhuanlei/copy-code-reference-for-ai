@@ -41,15 +41,55 @@ $(link) Remote Permalink        https://github.com/owner/repo/blob/abc/src/refer
 
 Pick one and it copies immediately — your `format` setting is not changed.
 
+## Copy a file reference from the Explorer
+
+Select a file in the Explorer and press `Ctrl+Shift+C` / `Cmd+Shift+C` to copy a
+**path-only** reference (no line numbers), e.g. `@src/foo.ts`. Handy for
+pointing an AI agent at a whole file.
+
+This is a keyboard-only shortcut — it deliberately does not add a
+command-palette or right-click entry, since the Explorer already has its own
+copy actions.
+
+Configure its prefix independently with `copyCodeRefForAi.fileRefPrefix`:
+
+```json
+{
+  // copy file references as "#src/foo.ts" while code references stay "@src/foo.ts:10-20"
+  "copyCodeRefForAi.fileRefPrefix": "#"
+}
+```
+
+When unset (the default), it inherits the prefix from your active format
+profile. Use `copyCodeRefForAi.explorerPathMode` to choose relative vs. absolute
+paths.
+
 ## Settings
 
-| Setting                               | Type   | Default    | Description                                                                  |
-| ------------------------------------- | ------ | ---------- | ---------------------------------------------------------------------------- |
-| `copyCodeRefForAi.format`             | enum   | `"custom"` | Preset format profile (see below)                                            |
-| `copyCodeRefForAi.prefix`             | string | `"@"`      | Prefix character — only used when `format` is `"custom"`                     |
-| `copyCodeRefForAi.pathLineSeparator`  | string | `":"`      | Between path and line number — only used when `format` is `"custom"`         |
-| `copyCodeRefForAi.lineRangeSeparator` | string | `"-"`      | Between start and end line — only used when `format` is `"custom"`           |
-| `copyCodeRefForAi.remoteRef`          | string | `"commit"` | Remote reference type: `"commit"` (stable permalink) or `"branch"` (mutable) |
+| Setting                               | Type           | Default      | Description                                                                             |
+| ------------------------------------- | -------------- | ------------ | --------------------------------------------------------------------------------------- |
+| `copyCodeRefForAi.format`             | enum           | `"custom"`   | Preset format profile (see below)                                                       |
+| `copyCodeRefForAi.prefix`             | string         | `"@"`        | Prefix character — only used when `format` is `"custom"`                                |
+| `copyCodeRefForAi.pathLineSeparator`  | string         | `":"`        | Between path and line number — only used when `format` is `"custom"`                    |
+| `copyCodeRefForAi.lineRangeSeparator` | string         | `"-"`        | Between start and end line — only used when `format` is `"custom"`                      |
+| `copyCodeRefForAi.remoteRef`          | enum           | `"commit"`   | Remote reference type: `"commit"` (stable permalink) or `"branch"` (mutable)            |
+| `copyCodeRefForAi.explorerPathMode`   | enum           | `"relative"` | Explorer file reference path: `"relative"` or `"absolute"`                              |
+| `copyCodeRefForAi.fileRefPrefix`      | string \| null | `null`       | Prefix for Explorer file references; `null` inherits the active format profile's prefix |
+
+Every setting is optional — the defaults above are used when a setting is
+absent. The block below lists all settings at their default values:
+
+```json
+{
+  "copyCodeRefForAi.format": "custom",
+  "copyCodeRefForAi.prefix": "@",
+  "copyCodeRefForAi.pathLineSeparator": ":",
+  "copyCodeRefForAi.lineRangeSeparator": "-",
+  "copyCodeRefForAi.remoteRef": "commit",
+  "copyCodeRefForAi.explorerPathMode": "relative",
+  "copyCodeRefForAi.fileRefPrefix": null
+}
+```
 
 ### Format profiles
 
