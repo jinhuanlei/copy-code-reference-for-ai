@@ -2,7 +2,7 @@
   "name": "copy-code-reference-for-ai",
   "displayName": "Copy Code Reference for AI",
   "description": "Allow users to easily copy code (relative and absolute path) references into an AI agent.",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "publisher": "jinhuanlei",
   "repository": {
     "type": "git",
@@ -107,7 +107,10 @@
           "description": "Whether the explorer/tab right-click copies a relative or absolute path."
         },
         "copyCodeRefForAi.fileRefPrefix": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": null,
           "description": "Prefix for file references (path without line numbers, e.g. @ or #). When null (default), inherits the prefix from the active format profile."
         },
