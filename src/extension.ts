@@ -185,7 +185,13 @@ async function copyFileReference(uri?: vscode.Uri): Promise<void> {
     cfg.get<string>("format", "custom"),
     getUserConfig(),
   );
-  const reference = buildReference({ path }, formatConfig);
+  const explorerPrefix = cfg.get<string | null>("explorerPrefix", null);
+  const effectiveConfig =
+    explorerPrefix !== null
+      ? { ...formatConfig, prefix: explorerPrefix }
+      : formatConfig;
+
+  const reference = buildReference({ path }, effectiveConfig);
   await vscode.env.clipboard.writeText(reference);
   vscode.window.setStatusBarMessage(`Copied: ${reference}`, 3000);
 }

@@ -38,6 +38,11 @@
         "command": "copyCodeRefForAi.copyAs",
         "title": "Copy Code Reference as...",
         "category": "Copy Code Reference"
+      },
+      {
+        "command": "copyCodeRefForAi.copyFileReference",
+        "title": "Copy File Reference for AI",
+        "category": "Copy Code Reference"
       }
     ],
     "keybindings": [
@@ -65,6 +70,13 @@
         {
           "command": "copyCodeRefForAi.copyAs",
           "group": "9_cutcopypaste@100"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "copyCodeRefForAi.copyFileReference",
+          "group": "9_cutcopypaste@100",
+          "when": "!explorerResourceIsFolder"
         }
       ]
     },
@@ -103,6 +115,11 @@
           ],
           "default": "relative",
           "description": "Whether the explorer/tab right-click copies a relative or absolute path."
+        },
+        "copyCodeRefForAi.explorerPrefix": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Prefix for file references copied from the Explorer (e.g. @ or #). When null (default), inherits the prefix from the active format profile."
         },
         "copyCodeRefForAi.format": {
           "type": "string",
