@@ -167,7 +167,7 @@ async function copyFileReference(uri?: vscode.Uri): Promise<void> {
   const resolvedUri = uri ?? vscode.window.activeTextEditor?.document.uri;
   if (!resolvedUri || resolvedUri.scheme !== "file") {
     vscode.window.showWarningMessage(
-      "Copy Fileq Reference: open or select a file first.",
+      "Copy File Reference: open or select a file first.",
     );
     return;
   }
