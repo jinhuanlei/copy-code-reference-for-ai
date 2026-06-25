@@ -45,7 +45,8 @@ Add these secrets in **GitHub → Settings → Secrets and variables → Actions
    npm version patch   # or minor, major
    ```
 
-   This auto-bumps the version in `package.json`, creates a commit, and adds a local tag.
+   This auto-bumps the version in `package.json`, creates a commit, and adds a
+   local tag.
 
 2. **Push to trigger CI**:
 
@@ -60,6 +61,7 @@ Add these secrets in **GitHub → Settings → Secrets and variables → Actions
 ### Version Numbering
 
 Use [semantic versioning](https://semver.org/) with `npm version`:
+
 - `npm version patch` — bug fixes (0.1.2 → 0.1.3)
 - `npm version minor` — new features (0.1.2 → 0.2.0)
 - `npm version major` — breaking changes (0.1.2 → 1.0.0)
@@ -76,4 +78,5 @@ ovsx publish
 
 ## CI/CD
 
-The [deploy workflow](.github/workflows/cicd.yml) runs on every tag push and publishes to both registries automatically.
+The [deploy workflow](.github/workflows/cicd.yml) runs on every tag push and
+publishes to both registries automatically.
