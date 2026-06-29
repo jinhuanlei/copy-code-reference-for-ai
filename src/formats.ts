@@ -39,13 +39,7 @@ export function resolveFormatConfig(
   if (formatSetting === "custom") {
     return userConfig;
   }
-  const profile = FORMAT_PROFILES.find((p) => p.id === formatSetting);
-  if (!profile) {
-    return userConfig;
-  }
-  return {
-    prefix: profile.prefix,
-    pathLineSeparator: profile.pathLineSeparator,
-    lineRangeSeparator: profile.lineRangeSeparator,
-  };
+  const { prefix, pathLineSeparator, lineRangeSeparator } =
+    FORMAT_PROFILES.find((p) => p.id === formatSetting) ?? userConfig;
+  return { prefix, pathLineSeparator, lineRangeSeparator };
 }

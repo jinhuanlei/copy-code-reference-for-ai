@@ -211,20 +211,13 @@ async function copyAs(): Promise<void> {
   const userConfig = getUserConfig();
   const docUri = vscode.window.activeTextEditor!.document.uri;
 
-  interface QuickPickItemEx extends vscode.QuickPickItem {
+  type QuickPickItemEx = vscode.QuickPickItem & {
     value: string | null;
     isRemote: boolean;
-  }
+  };
 
   const items: QuickPickItemEx[] = FORMAT_PROFILES.map((profile) => {
-    const ref = buildReference(
-      { path, startLine, endLine },
-      {
-        prefix: profile.prefix,
-        pathLineSeparator: profile.pathLineSeparator,
-        lineRangeSeparator: profile.lineRangeSeparator,
-      },
-    );
+    const ref = buildReference({ path, startLine, endLine }, profile);
     return {
       label: `$(file-code) ${profile.label}`,
       description: ref,
